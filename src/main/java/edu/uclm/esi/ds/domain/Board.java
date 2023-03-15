@@ -3,14 +3,14 @@ package edu.uclm.esi.ds.domain;
 import java.security.SecureRandom;
 
 public class Board {
-	private byte[][] digits;
+	private int[][] digits;
 
 	public Board() {
-		this.digits = new byte[9][9];
+		this.digits = new int[9][9];
 		SecureRandom dado = new SecureRandom();
 		for(int i=0;i<3;i++) {
 			for(int j=0;j<9;j++) {
-				this.digits[i][j]=(byte) dado.nextInt(1,10);
+				this.digits[i][j]= dado.nextInt(1,10);
 			}
 		}
 	}
@@ -27,7 +27,7 @@ public class Board {
 		return result;
 	}
 	
-	public byte[][] getDigits(){
+	public int[][] getDigits(){
 		return this.digits;
 	}
 	
