@@ -11,6 +11,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import edu.uclm.esi.ds.domain.Match;
 import edu.uclm.esi.ds.services.GameService;
+import jakarta.servlet.http.HttpSession;
 
 @RestController
 @RequestMapping("games")
@@ -21,7 +22,7 @@ public class GamesController {
 	private GameService gamesService;
 	
 	@GetMapping("/requestGame")
-	public Match requestGame(@RequestParam String juego, @RequestParam String player) {
+	public Match requestGame(HttpSession httpSession, @RequestParam String juego, @RequestParam String player) {
 		if (!juego.equals("nm"))
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No se encuentra ese juego");
 		return this.gamesService.requestGame(juego, player);
