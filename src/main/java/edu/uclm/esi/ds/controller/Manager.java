@@ -8,9 +8,6 @@ import org.springframework.stereotype.Component;
 import edu.uclm.esi.ds.ws.Wrapper;
 
 
-
-
-
 @Component
 public class Manager {
 	private ConcurrentHashMap<String, Wrapper> wrapperSessionsByHttp = new ConcurrentHashMap<>();

@@ -4,7 +4,7 @@ import org.springframework.web.socket.WebSocketSession;
 
 public class Wrapper {
 	private WebSocketSession webSocketSession;
-	private String uaSessionId;
+	private String httpSessionId;
 	
 	public WebSocketSession getWebSocketSession() {
 		return webSocketSession;
@@ -13,10 +13,10 @@ public class Wrapper {
 		this.webSocketSession = webSocketSession;
 	}
 	public String getHttpSessionId() {
-		return uaSessionId;
+		return httpSessionId;
 	}
-	public void setUaSessionId(String uaSessionId) {
-		this.uaSessionId = uaSessionId;
+	public void setUaSessionId(String httpSessionId) {
+		this.httpSessionId = httpSessionId;
 	}
 	
 	

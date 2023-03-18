@@ -30,5 +30,7 @@ public class Board {
 	public int[][] getDigits(){
 		return this.digits;
 	}
-	
+	public void setDigits(int[][] digits) {
+		this.digits=digits;
+	}
 }

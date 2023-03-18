@@ -42,7 +42,11 @@ public class Match {
 	private void buildBoards() {
 		Board board = new Board();
 		this.boards.put(this.players.get(0), board);
-		this.boards.put(this.players.get(1), board.copy());
+		Board boards = board.copy();
+		int [][] matrizdos=boards.getDigits();
+		matrizdos[4][4]=1;
+		boards.setDigits(matrizdos);
+		this.boards.put(this.players.get(1), boards);
 		
 		
 		
@@ -55,7 +59,7 @@ public class Match {
 			
 			WebSocketSession session=Manager.get().findWrapperSessionByHttp(this.players.get(0)).getWebSocketSession();
 			JSONObject jso = new JSONObject();
-			jso.put("boards", this.boards);
+			jso.put("boards", this.getBoards());
 			jso.put("id", id);
 			jso.put("player", this.players);
 			jso.put("ready", this.ready);
