@@ -1,10 +1,14 @@
 package edu.uclm.esi.ds.controller;
 
+import java.util.Map;
+
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -45,4 +49,11 @@ public class PaymentsController {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "No se ha podido procesar el pago");
 		}
 	}
+	
+	@PostMapping(name= "/paymentOk", consumes ="application/json")
+	public void paymentOk(@RequestBody Map<String, String> info) {
+		String token=info.get("token");
+		
+	}
+	
 }
