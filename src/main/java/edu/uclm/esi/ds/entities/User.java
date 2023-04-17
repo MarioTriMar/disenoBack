@@ -27,6 +27,7 @@ public class User {
 	@NotEmpty
 	private String pwd;
 	
+	
 	public User() {
 		this.id=UUID.randomUUID().toString();
 	}
@@ -62,6 +63,8 @@ public class User {
 	public void setPwd(String pwd) {
 		this.pwd = org.apache.commons.codec.digest.DigestUtils.sha512Hex(pwd);
 	}
+
+	
 	
 
 }
