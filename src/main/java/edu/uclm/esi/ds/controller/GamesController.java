@@ -34,8 +34,8 @@ public class GamesController {
 	}
 	
 	@PutMapping("/makeMovement")
-	public Match makeMovement(@RequestBody Map<String, Object> info) {
-		return this.gamesService.makeMovement(info);
-		
-	}
+	public Map<String, Object> makeMovement(@RequestBody Map<String, Object> info) {
+        return this.gamesService.makeMovement(info);
+
+    }
 }
