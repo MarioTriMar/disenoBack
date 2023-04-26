@@ -1,5 +1,7 @@
 package edu.uclm.esi.ds.controller;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.springframework.context.annotation.Bean;
@@ -24,5 +26,13 @@ public class Manager {
 	@Bean
 	public static Manager get() {
 		return ManagerHolder.singleton;
+	}
+	public String readFile(String fileName) throws IOException {
+		ClassLoader classLoader = getClass().getClassLoader();
+		try (InputStream fis = classLoader.getResourceAsStream(fileName)) {
+			byte[] b = new byte[fis.available()];
+			fis.read(b);
+			return new String(b);
+		}
 	}
 }
