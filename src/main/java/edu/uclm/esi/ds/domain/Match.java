@@ -43,9 +43,6 @@ public class Match {
 		Board board = new Board();
 		this.boards.put(this.players.get(0), board);
 		Board boards = board.copy();
-		int [][] matrizdos=boards.getDigits();
-		matrizdos[4][4]=1;
-		boards.setDigits(matrizdos);
 		this.boards.put(this.players.get(1), boards);
 		
 		
