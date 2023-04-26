@@ -56,6 +56,7 @@ public class Match {
 			
 			WebSocketSession session=Manager.get().findWrapperSessionByHttp(this.players.get(0)).getWebSocketSession();
 			JSONObject jso = new JSONObject();
+			jso.put("type", "matchReady");
 			jso.put("boards", this.getBoards());
 			jso.put("id", id);
 			jso.put("player", this.players);
@@ -75,6 +76,25 @@ public class Match {
 	
 	public List<Board> getBoards(){
 		return boards.values().stream().toList();
+	}
+	public Board getBoard(String httpSession){
+		return boards.get(httpSession);
+	}
+
+	public String getHttpSessionRival(String httpSession) {
+		if(players.get(0).equals(httpSession)) {
+			return players.get(1);
+		}else {
+			return players.get(0);
+		}
+		
+	}
+
+	public void setBoard(int[][] board, String httpSession) {
+		Board boardAux=this.boards.get(httpSession);
+		boardAux.setDigits(board);
+		this.boards.replace(httpSession, boardAux);
+		
 	}
 
 }
