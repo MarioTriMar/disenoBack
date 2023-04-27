@@ -63,16 +63,16 @@ public class GameService {
         Map<String, Object> matchMove = new HashMap<>();
         matchMove.put("boards", match.getBoard(info.get("idJugador").toString()));
 
-        actualizarWebSocket(httpSessionRival, match.getBoard(info.get("idJugador").toString()));
+        actualizarWebSocket(httpSessionRival, match.getBoard(info.get("idJugador").toString()), "movement");
 
         return matchMove;
 
     }
-	private void actualizarWebSocket(String httpSessionRival, Board board) {
+	private void actualizarWebSocket(String httpSessionRival, Board board, String type) {
         WebSocketSession session=Manager.get().findWrapperSessionByHttp(httpSessionRival).getWebSocketSession();
 
         JSONObject jso = new JSONObject();
-        jso.put("type", "movement");
+        jso.put("type", type);
         jso.put("boards", board.getDigits());
 
         TextMessage message = new TextMessage(jso.toString());
@@ -82,5 +82,19 @@ public class GameService {
             e.printStackTrace();
         }
     }
+
+	public Map<String, Object> addRow(Map<String, Object> info) {
+		Match match=this.matches.get(info.get("idPartida"));
+        String httpSessionRival=match.getHttpSessionRival(info.get("idJugador").toString());
+        Board board = match.getBoard(info.get("idJugador").toString());
+        board.addRow();
+        
+        Map<String, Object> matchMove = new HashMap<>();
+        matchMove.put("boards", board);
+        
+        actualizarWebSocket(httpSessionRival, board, "addRow");
+        
+		return matchMove;
+	}
 	
 }

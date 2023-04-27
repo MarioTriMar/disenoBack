@@ -36,6 +36,10 @@ public class GamesController {
 	@PutMapping("/makeMovement")
 	public Map<String, Object> makeMovement(@RequestBody Map<String, Object> info) {
         return this.gamesService.makeMovement(info);
-
     }
+	
+	@PutMapping("/addRow")
+	public Map<String, Object> addRow(@RequestBody Map<String, Object> info){
+		return this.gamesService.addRow(info);
+	}
 }

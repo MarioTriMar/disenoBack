@@ -14,6 +14,26 @@ public class Board {
 			}
 		}
 	}
+	
+	public void addRow() {
+		int contador = 0;
+		SecureRandom dado = new SecureRandom();
+	    for (int i = 0; i < this.digits.length && contador < 2; i++) {
+	        boolean allZeros = true;
+	        for (int j = 0; j < this.digits[i].length; j++) {
+	            if (this.digits[i][j] != 0) {
+	                allZeros = false;
+	                break;
+	            }
+	        }
+	        if (allZeros) {
+	        	contador++;
+	            for (int j = 0; j < this.digits[i].length; j++) {
+	            	this.digits[i][j] = dado.nextInt(1,10);
+	            }
+	        }
+	    }
+	}
 
 	public Board copy() {
 		
