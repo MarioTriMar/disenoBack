@@ -96,5 +96,26 @@ public class GameService {
         
 		return matchMove;
 	}
+
+	public void win(Map<String, Object> info) {
+		Match match=this.matches.get(info.get("idPartida"));
+        String httpSessionRival=match.getHttpSessionRival(info.get("idJugador").toString());
+        avisarGanador(httpSessionRival);
+	}
+
+	private void avisarGanador(String httpSessionRival) {
+		WebSocketSession session=Manager.get().findWrapperSessionByHttp(httpSessionRival).getWebSocketSession();
+
+        JSONObject jso = new JSONObject();
+        jso.put("type", "perdido");
+
+        TextMessage message = new TextMessage(jso.toString());
+        try {
+            session.sendMessage(message);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+		
+	}
 	
 }

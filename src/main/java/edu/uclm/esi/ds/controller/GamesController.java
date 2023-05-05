@@ -42,4 +42,11 @@ public class GamesController {
 	public Map<String, Object> addRow(@RequestBody Map<String, Object> info){
 		return this.gamesService.addRow(info);
 	}
+	
+	
+	@PutMapping("/win")
+	public void win(@RequestBody Map<String, Object> info){
+		this.gamesService.win(info);
+	}
+	
 }

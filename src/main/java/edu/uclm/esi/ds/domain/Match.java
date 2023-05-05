@@ -19,6 +19,7 @@ public class Match {
 	private List<String> players;
 	private HashMap<String, Board> boards;
 	
+	
 	public Match() {
 		this.id=UUID.randomUUID().toString();
 		this.players=new ArrayList<>();
