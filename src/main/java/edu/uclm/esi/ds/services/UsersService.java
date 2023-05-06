@@ -29,21 +29,42 @@ public class UsersService {
 		user.setName(name);
 		user.setEmail(email);
 		user.setPwd(pwd1);
-		Token token= new Token();
-		token.setUser(user);
-		this.userDAO.save(user);
-		this.tokenDAO.save(token);
-		this.emailService.sendConfirmationEmail(user, token);
+		Optional<User> userExist = this.userDAO.findByName(name);
+		if (userExist.isPresent() && userExist.get().getValidationDate()==null){
+			Optional<Token> tokenExist=this.tokenDAO.findByUser(userExist.get());
+			if (tokenExist.isPresent()) {
+				long time = System.currentTimeMillis();
+				if (time-tokenExist.get().getCreationTime()<24*60*60*1000)
+					throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "Valida tu cuenta");
+				this.tokenDAO.delete(tokenExist.get());
+				Token token= new Token();
+				token.setUser(user);
+				this.tokenDAO.save(token);
+				this.emailService.sendConfirmationEmail(user, token);
+			}
+		}else if(!userExist.isPresent()) {
+			Token token= new Token();
+			token.setUser(user);
+			this.userDAO.save(user);
+			this.tokenDAO.save(token);
+			this.emailService.sendConfirmationEmail(user, token);
+		}else if(userExist.isPresent() && userExist.get().getValidationDate()!=null) {
+			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "No puedes registrate con dichos credenciales");
+		}
+		
 		
 	}
 
 	public void login(String name, String pwd) {
-		User user = this.userDAO.findByName(name);
-		if (user==null) {
+		Optional<User> user = this.userDAO.findByName(name);
+		if (!user.isPresent()) {
 			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Credenciales inválidas");
 		}
+		if(user.get().getValidationDate()==null) {
+			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Cuenta no validada");
+		}
 		String pwdEncripted = org.apache.commons.codec.digest.DigestUtils.sha512Hex(pwd);
-		if (!user.getPwd().equals(pwdEncripted ))
+		if (!user.get().getPwd().equals(pwdEncripted ))
 			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Credenciales inválidas");
 	}
 
@@ -51,6 +72,9 @@ public class UsersService {
 		Optional<Token> optToken=this.tokenDAO.findById(tokenId);
 		if (!optToken.isPresent())
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No se encuentra el token o ha caducado");
+		if (optToken.get().getConfirmationTime()!=null) 
+			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Cuenta ya validada");
+		
 		Token token = optToken.get();
 		long time = System.currentTimeMillis();
 		if (time-token.getCreationTime()>24*60*60*1000)

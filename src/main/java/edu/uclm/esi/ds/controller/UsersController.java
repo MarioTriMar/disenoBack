@@ -46,7 +46,7 @@ public class UsersController {
 		try {
 			this.usersService.register(name, email, pwd1);
 		}catch (Exception e) {
-			throw new ResponseStatusException(HttpStatus.CONFLICT);
+			throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
 		}
 		
 	}
@@ -67,7 +67,7 @@ public class UsersController {
 		try {
 			this.usersService.login(name, pwd1);
 		}catch(Exception e) {
-			throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+			throw new ResponseStatusException(HttpStatus.FORBIDDEN, e.getMessage());
 		}
 		//response.setHeader("Current", httpSession.getId());
 		Map<String, Object>map=new HashMap<>();
