@@ -28,7 +28,7 @@ import jakarta.servlet.http.HttpSession;
 public class PaymentsController {
 	
 	static {
-		Stripe.apiKey = "sk_test_51MqBO8FClxgzl70eSdpic87q59MHJaK7bSuVkwd3cWXYLzmLz6GDqztLc33mGpWjZxZspkmOHRzdbleZwMepfAFk00ctleZj12";
+		Stripe.apiKey = "sk_test_51MqB8XKhg9Z0Z1gkBOO9ySdgeazWaA9JyvJRQvca4gK1ABwgTZdJuLb3ekyqAi74wuFEjMc12FyTg6uEkwXwPPS100ZohJxgxv";
 	}
 
 	@RequestMapping("/prepay")
