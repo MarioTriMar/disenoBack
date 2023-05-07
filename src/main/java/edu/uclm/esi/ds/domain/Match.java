@@ -18,12 +18,13 @@ public class Match {
 	private boolean ready;
 	private List<String> players;
 	private HashMap<String, Board> boards;
-	
+	private HashMap<String, String> idsPlayers;
 	
 	public Match() {
 		this.id=UUID.randomUUID().toString();
 		this.players=new ArrayList<>();
 		this.boards = new HashMap<>();
+		this.idsPlayers=new HashMap<>();
 	}
 	
 	public String getId() {
@@ -50,8 +51,9 @@ public class Match {
 		
 	}
 
-	public void addPlayer(String player) {
+	public void addPlayer(String player, String idPlayer) {
 		this.players.add(player);
+		this.idsPlayers.put(player, idPlayer);
 		if (this.players.size()==2) {
 			this.setReady(true);
 			
@@ -98,4 +100,9 @@ public class Match {
 		
 	}
 
+	public List<String> getIdsPlayers() {
+		return idsPlayers.values().stream().toList();
+	}
+
+	
 }

@@ -5,17 +5,23 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 
+
+
 import edu.uclm.esi.ds.controller.Manager;
+import edu.uclm.esi.ds.dao.UserDAO;
 import edu.uclm.esi.ds.domain.Board;
 import edu.uclm.esi.ds.domain.Match;
 import edu.uclm.esi.ds.domain.WaitingRoom;
+import edu.uclm.esi.ds.entities.User;
 
 
 @Service
@@ -25,13 +31,16 @@ public class GameService {
 
 	private WaitingRoom waitingRoom;
 	
+	@Autowired
+	private UserDAO userDAO;
+	
 	public GameService() {
 		this.waitingRoom=new WaitingRoom();
 		this.matches=new ConcurrentHashMap<>();
 	}
 	
-	public Match requestGame(String juego, String player) {
-		Match match=this.waitingRoom.findMatch(juego, player);
+	public Match requestGame(String juego, String player, String idPlayer) {
+		Match match=this.waitingRoom.findMatch(juego, player, idPlayer);
 		if(match.isReady())
 			this.matches.put(match.getId(), match);
 		return match;
@@ -115,6 +124,20 @@ public class GameService {
         } catch (IOException e) {
             e.printStackTrace();
         }
+		
+	}
+
+	public void quitarFichas(String idPartida) {
+		Match match=this.matches.get(idPartida);
+		
+		for(int i=0; i<match.getIdsPlayers().size();i++) {
+			String id=match.getIdsPlayers().get(i);
+			Optional<User> user=this.userDAO.findById(id);
+			
+			int fichas = user.get().getFichas();
+			user.get().setFichas(--fichas);
+			this.userDAO.save(user.get());
+		}
 		
 	}
 	

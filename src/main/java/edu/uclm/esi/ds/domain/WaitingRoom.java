@@ -12,15 +12,15 @@ public class WaitingRoom {
 		this.matches=new ConcurrentHashMap<>();
 	}
 	
-	public Match findMatch(String juego, String player) {
+	public Match findMatch(String juego, String player, String idPlayer) {
 		
 		Match match = this.matches.get(juego);
 		if (match==null) {
 			match = new Match();
-			match.addPlayer(player);
+			match.addPlayer(player, idPlayer);
 			this.matches.put(juego, match);
 		}else {
-			match.addPlayer(player);
+			match.addPlayer(player, idPlayer);
 			match=this.matches.get(juego);
 		}
 		

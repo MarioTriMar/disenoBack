@@ -1,5 +1,6 @@
 package edu.uclm.esi.ds.controller;
 
+import java.util.ArrayList;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,10 +28,10 @@ public class GamesController {
 	private GameService gamesService;
 	
 	@GetMapping("/requestGame")
-	public Match requestGame(HttpSession httpSession, @RequestParam String juego, @RequestParam String player) {
+	public Match requestGame(HttpSession httpSession, @RequestParam String juego, @RequestParam String player, @RequestParam String idPlayer) {
 		if (!juego.equals("nm"))
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No se encuentra ese juego");
-		return this.gamesService.requestGame(juego, player);
+		return this.gamesService.requestGame(juego, player, idPlayer);
 	}
 	
 	@PutMapping("/makeMovement")
@@ -49,4 +50,8 @@ public class GamesController {
 		this.gamesService.win(info);
 	}
 	
+	@PutMapping("/quitarFichas")
+	public void quitarFichas(@RequestBody String idPartida){
+		this.gamesService.quitarFichas(idPartida);
+	}
 }

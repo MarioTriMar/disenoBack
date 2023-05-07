@@ -27,6 +27,8 @@ public class User {
 	@NotEmpty
 	private String pwd;
 	
+	private int fichas;
+	
 	private Long validationDate;
 	
 	public User() {
@@ -71,6 +73,14 @@ public class User {
 
 	public void setValidationDate(Long validationDate) {
 		this.validationDate = validationDate;
+	}
+
+	public int getFichas() {
+		return fichas;
+	}
+
+	public void setFichas(int fichas) {
+		this.fichas = fichas;
 	}
 
 	

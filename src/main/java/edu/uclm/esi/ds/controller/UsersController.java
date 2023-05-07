@@ -64,15 +64,21 @@ public class UsersController {
 		String name = creedenciales.get("name").toString();
 		String pwd1 = creedenciales.get("pwd1").toString();
 		System.out.println(httpSession.getId());
+		User user;
 		try {
-			this.usersService.login(name, pwd1);
+			user=this.usersService.login(name, pwd1);
 		}catch(Exception e) {
 			throw new ResponseStatusException(HttpStatus.FORBIDDEN, e.getMessage());
 		}
 		//response.setHeader("Current", httpSession.getId());
 		Map<String, Object>map=new HashMap<>();
 		map.put("httpSessionId", httpSession.getId());
-		map.put("name", name);
+		map.put("user", user);
 		return map;
+	}
+	
+	@GetMapping("/cargarUsuario")
+	public User cargarUsuario(@RequestParam String idPlayer) {
+		return this.usersService.cargarUsuario(idPlayer);
 	}
 }

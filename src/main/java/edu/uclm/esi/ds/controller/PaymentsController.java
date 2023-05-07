@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -20,12 +21,16 @@ import com.stripe.param.PaymentIntentCreateParams;
 
 import edu.uclm.esi.ds.domain.Match;
 import edu.uclm.esi.ds.services.GameService;
+import edu.uclm.esi.ds.services.UsersService;
 import jakarta.servlet.http.HttpSession;
 
 @RestController
 @RequestMapping("payments")
 @CrossOrigin("*")
 public class PaymentsController {
+	
+	@Autowired
+	private UsersService usersService;
 	
 	static {
 		Stripe.apiKey = "sk_test_51MqB8XKhg9Z0Z1gkBOO9ySdgeazWaA9JyvJRQvca4gK1ABwgTZdJuLb3ekyqAi74wuFEjMc12FyTg6uEkwXwPPS100ZohJxgxv";
@@ -55,5 +60,16 @@ public class PaymentsController {
 		String token=info.get("token");
 		
 	}
+	
+	@PutMapping("/pagoCompletado")
+	public void pagoCompletado(@RequestParam double amount, @RequestParam String idPlayer) {
+		try {
+			usersService.pagoCompletado(amount, idPlayer);
+		}catch(Exception e) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+		}
+		
+	}
+	
 	
 }

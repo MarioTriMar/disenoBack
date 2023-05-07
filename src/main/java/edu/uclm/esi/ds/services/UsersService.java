@@ -29,6 +29,7 @@ public class UsersService {
 		user.setName(name);
 		user.setEmail(email);
 		user.setPwd(pwd1);
+		user.setFichas(1);
 		Optional<User> userExist = this.userDAO.findByName(name);
 		if (userExist.isPresent() && userExist.get().getValidationDate()==null){
 			Optional<Token> tokenExist=this.tokenDAO.findByUser(userExist.get());
@@ -55,7 +56,7 @@ public class UsersService {
 		
 	}
 
-	public void login(String name, String pwd) {
+	public User login(String name, String pwd) {
 		Optional<User> user = this.userDAO.findByName(name);
 		if (!user.isPresent()) {
 			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Credenciales inválidas");
@@ -66,6 +67,7 @@ public class UsersService {
 		String pwdEncripted = org.apache.commons.codec.digest.DigestUtils.sha512Hex(pwd);
 		if (!user.get().getPwd().equals(pwdEncripted ))
 			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Credenciales inválidas");
+		return user.get();
 	}
 
 	public void validate(String tokenId) {
@@ -84,6 +86,24 @@ public class UsersService {
 		this.userDAO.save(user);
 		this.tokenDAO.delete(token);
 
+	}
+
+	public void pagoCompletado(double amount, String idPlayer) {
+		Optional<User> user=this.userDAO.findById(idPlayer);
+		if (!user.isPresent()) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No se encuentra el usuario");
+		}
+		if(amount==1) {
+			int fichas =user.get().getFichas();
+			user.get().setFichas(++fichas);
+		}
+		this.userDAO.save(user.get());
+		
+	}
+
+	public User cargarUsuario(String idPlayer) {
+		Optional<User> user=this.userDAO.findById(idPlayer);
+		return user.get();
 	}
 
 }
