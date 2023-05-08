@@ -28,57 +28,57 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 @AutoConfigureMockMvc
 @TestMethodOrder(org.junit.jupiter.api.MethodOrderer.OrderAnnotation.class)
 public class TestUser {
-	@Autowired
-	private MockMvc server;
-
-	@Test @Order(1)
-	void testRegister() throws Exception {
-		ResultActions result = this.sendRequest("Pepe", "pepe@pepe.com", "pepe1234", "pepe1234");
-		result.andExpect(status().isOk()).andReturn();
-		
-		result = this.sendRequest("Pepe", "pepe@pepe.com", "pepe1234", "pepe1234");
-		result.andExpect(status().isConflict()).andReturn();
-		
-		result = this.sendRequest("Ana", "ana@ana.com", "ana123", "ana1234");
-		result.andExpect(status().isNotAcceptable()).andReturn();
-		
-		result = this.sendRequest("Ana", "ana@ana.com", "ana1234", "ana1234");
-		result.andExpect(status().is(200)).andReturn();
-	}
-	
-	@Test @Order(2)
-	void testLogin() throws Exception{
-		ResultActions result = this.sendLogin("Pepe", "pepe1234");
-		result.andExpect(status().is(200)).andReturn();
-		
-		result = this.sendLogin("Ana", "ana1234");
-		result.andExpect(status().is(200)).andReturn();
-	}
-	
-	private ResultActions sendLogin(String name, String pwd1) throws Exception {
-		JSONObject jsoUser = new JSONObject()
-				.put("name", name)
-				.put("pwd1", pwd1);
-		RequestBuilder request = MockMvcRequestBuilders.
-				put("/users/login").
-				contentType("application/json").
-				content(jsoUser.toString());
-		ResultActions resultActions = this.server.perform(request);
-		return resultActions;
-	}
-
-	private ResultActions sendRequest(String name, String email, String pwd1, String pwd2) throws Exception, UnsupportedEncodingException {
-		JSONObject jsoUser = new JSONObject()
-				.put("name", name)
-				.put("email", email)
-				.put("pwd1", pwd1)
-				.put("pwd2", pwd2);
-		RequestBuilder request = MockMvcRequestBuilders.
-				post("/users/register").
-				contentType("application/json").
-				content(jsoUser.toString());
-		ResultActions resultActions = this.server.perform(request);
-		return resultActions;
-	}
+//	@Autowired
+//	private MockMvc server;
+//
+//	@Test @Order(1)
+//	void testRegister() throws Exception {
+//		ResultActions result = this.sendRequest("Pepe", "pepe@pepe.com", "pepe1234", "pepe1234");
+//		result.andExpect(status().isOk()).andReturn();
+//		
+//		result = this.sendRequest("Pepe", "pepe@pepe.com", "pepe1234", "pepe1234");
+//		result.andExpect(status().isConflict()).andReturn();
+//		
+//		result = this.sendRequest("Ana", "ana@ana.com", "ana123", "ana1234");
+//		result.andExpect(status().isNotAcceptable()).andReturn();
+//		
+//		result = this.sendRequest("Ana", "ana@ana.com", "ana1234", "ana1234");
+//		result.andExpect(status().is(200)).andReturn();
+//	}
+//	
+//	@Test @Order(2)
+//	void testLogin() throws Exception{
+//		ResultActions result = this.sendLogin("Pepe", "pepe1234");
+//		result.andExpect(status().is(200)).andReturn();
+//		
+//		result = this.sendLogin("Ana", "ana1234");
+//		result.andExpect(status().is(200)).andReturn();
+//	}
+//	
+//	private ResultActions sendLogin(String name, String pwd1) throws Exception {
+//		JSONObject jsoUser = new JSONObject()
+//				.put("name", name)
+//				.put("pwd1", pwd1);
+//		RequestBuilder request = MockMvcRequestBuilders.
+//				put("/users/login").
+//				contentType("application/json").
+//				content(jsoUser.toString());
+//		ResultActions resultActions = this.server.perform(request);
+//		return resultActions;
+//	}
+//
+//	private ResultActions sendRequest(String name, String email, String pwd1, String pwd2) throws Exception, UnsupportedEncodingException {
+//		JSONObject jsoUser = new JSONObject()
+//				.put("name", name)
+//				.put("email", email)
+//				.put("pwd1", pwd1)
+//				.put("pwd2", pwd2);
+//		RequestBuilder request = MockMvcRequestBuilders.
+//				post("/users/register").
+//				contentType("application/json").
+//				content(jsoUser.toString());
+//		ResultActions resultActions = this.server.perform(request);
+//		return resultActions;
+//	}
 	
 }

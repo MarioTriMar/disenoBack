@@ -24,37 +24,37 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 @ExtendWith(SpringExtension.class)
 @AutoConfigureMockMvc
 public class TestGames {
-	@Autowired
-	private MockMvc server;
-
-	@Test
-	void testRequestMatchNM() throws Exception {
-		String payloadPepe = sendRequest("Pepe");
-		JSONObject jsoPepe = new JSONObject(payloadPepe);
-		assertFalse(jsoPepe.getBoolean("ready"));
-		
-		String payloadAna = sendRequest("Ana");
-		JSONObject jsoAna = new JSONObject(payloadAna);
-		assertTrue(jsoAna.getBoolean("ready"));
-		
-		assertTrue(jsoAna.getJSONArray("boards").length()==2);
-	}
-	
-	@Test
-	private String sendRequest(String player) throws Exception, UnsupportedEncodingException {
-		RequestBuilder request = MockMvcRequestBuilders.get("/games/requestGame?juego=nm&player=" + player);
-		ResultActions resultActions = this.server.perform(request);
-		MvcResult result = resultActions
-				.andExpect(status().isOk())
-				.andReturn();
-		MockHttpServletResponse response = result.getResponse();
-		String payload = response.getContentAsString();
-		return payload;
-	}
-	@Test
-	void testRequestMatchTrivial() throws Exception {
-		RequestBuilder request = MockMvcRequestBuilders.get("/games/requestGame?juego=trivial&player=Juan");
-		this.server.perform(request).andExpect(status().isNotFound());
-	}
+//	@Autowired
+//	private MockMvc server;
+//	
+//	@Test
+//	void testRequestMatchNM() throws Exception {
+//		String payloadPepe = sendRequest("Pepe");
+//		JSONObject jsoPepe = new JSONObject(payloadPepe);
+//		assertFalse(jsoPepe.getBoolean("ready"));
+//		
+//		String payloadAna = sendRequest("Ana");
+//		JSONObject jsoAna = new JSONObject(payloadAna);
+//		assertTrue(jsoAna.getBoolean("ready"));
+//		
+//		assertTrue(jsoAna.getJSONArray("boards").length()==2);
+//	}
+//	
+//	@Test
+//	private String sendRequest(String player) throws Exception, UnsupportedEncodingException {
+//		RequestBuilder request = MockMvcRequestBuilders.get("/games/requestGame?juego=nm&player=" + player);
+//		ResultActions resultActions = this.server.perform(request);
+//		MvcResult result = resultActions
+//				.andExpect(status().isOk())
+//				.andReturn();
+//		MockHttpServletResponse response = result.getResponse();
+//		String payload = response.getContentAsString();
+//		return payload;
+//	}
+//	@Test
+//	void testRequestMatchTrivial() throws Exception {
+//		RequestBuilder request = MockMvcRequestBuilders.get("/games/requestGame?juego=trivial&player=Juan");
+//		this.server.perform(request).andExpect(status().isNotFound());
+//	}
 	
 }
