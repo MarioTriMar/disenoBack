@@ -27,6 +27,10 @@ public class User {
 	@NotEmpty
 	private String pwd;
 	
+	private int fichas;
+	
+	private Long validationDate;
+	
 	public User() {
 		this.id=UUID.randomUUID().toString();
 	}
@@ -62,6 +66,24 @@ public class User {
 	public void setPwd(String pwd) {
 		this.pwd = org.apache.commons.codec.digest.DigestUtils.sha512Hex(pwd);
 	}
+
+	public Long getValidationDate() {
+		return validationDate;
+	}
+
+	public void setValidationDate(Long validationDate) {
+		this.validationDate = validationDate;
+	}
+
+	public int getFichas() {
+		return fichas;
+	}
+
+	public void setFichas(int fichas) {
+		this.fichas = fichas;
+	}
+
+	
 	
 
 }

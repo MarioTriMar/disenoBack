@@ -2,8 +2,10 @@ package edu.uclm.esi.ds.ws;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.json.JSONObject;
+import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.BinaryMessage;
 import org.springframework.web.socket.CloseStatus;
@@ -11,13 +13,24 @@ import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
+import edu.uclm.esi.ds.controller.Manager;
+
+
 @Component
 public class WSGames extends TextWebSocketHandler {
 	private ArrayList<WebSocketSession> sessions = new ArrayList<>();
 	//Cuando establezca la conexion
 	@Override
 	public void afterConnectionEstablished(WebSocketSession session) throws Exception {
+		session.setBinaryMessageSizeLimit(1000 * 1024 * 1024);
 		this.sessions.add(session);
+		String httpSession = session.getUri().getQuery().substring(10).replace("nId=", "");
+		
+		Wrapper ws = new Wrapper();
+		ws.setUaSessionId(httpSession);
+		ws.setWebSocketSession(session);
+		Manager.get().addWrapperSession(ws);
+
 	}
 
 	//Cuando envie un mensaje desde el cliente

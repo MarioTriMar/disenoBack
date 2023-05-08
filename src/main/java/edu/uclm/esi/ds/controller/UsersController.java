@@ -1,16 +1,20 @@
 package edu.uclm.esi.ds.controller;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
@@ -19,6 +23,8 @@ import edu.uclm.esi.ds.domain.Match;
 import edu.uclm.esi.ds.entities.User;
 import edu.uclm.esi.ds.services.GameService;
 import edu.uclm.esi.ds.services.UsersService;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 @RestController
 @RequestMapping("users")
@@ -40,20 +46,39 @@ public class UsersController {
 		try {
 			this.usersService.register(name, email, pwd1);
 		}catch (Exception e) {
-			throw new ResponseStatusException(HttpStatus.CONFLICT);
+			throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
 		}
 		
 	}
-	
+	@GetMapping("/validate/{tokenId}")
+	public void validate(@PathVariable String tokenId) {
+	try {
+		this.usersService.validate(tokenId);
+	} catch (Exception e) {
+		throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
+		}
+	}
 	@PutMapping("/login")
-	public void login(@RequestBody Map<String, Object> creedenciales) {
+	//@CrossOrigin(exposedHeaders = "Current")
+	public Map<String, Object> login(HttpSession httpSession,HttpServletResponse response,@RequestBody Map<String, Object> creedenciales) {
 		String name = creedenciales.get("name").toString();
 		String pwd1 = creedenciales.get("pwd1").toString();
+		System.out.println(httpSession.getId());
+		User user;
 		try {
-			this.usersService.login(name, pwd1);
+			user=this.usersService.login(name, pwd1);
 		}catch(Exception e) {
-			throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+			throw new ResponseStatusException(HttpStatus.FORBIDDEN, e.getMessage());
 		}
-		
+		//response.setHeader("Current", httpSession.getId());
+		Map<String, Object>map=new HashMap<>();
+		map.put("httpSessionId", httpSession.getId());
+		map.put("user", user);
+		return map;
+	}
+	
+	@GetMapping("/cargarUsuario")
+	public User cargarUsuario(@RequestParam String idPlayer) {
+		return this.usersService.cargarUsuario(idPlayer);
 	}
 }
