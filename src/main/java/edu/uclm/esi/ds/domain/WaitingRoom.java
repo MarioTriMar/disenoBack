@@ -22,6 +22,7 @@ public class WaitingRoom {
 		}else {
 			match.addPlayer(player, idPlayer);
 			match=this.matches.get(juego);
+			this.matches.remove(juego);
 		}
 		
 		//quizas borrar la partida del diccionario

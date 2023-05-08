@@ -17,10 +17,12 @@ import org.springframework.web.socket.WebSocketSession;
 
 
 import edu.uclm.esi.ds.controller.Manager;
+import edu.uclm.esi.ds.dao.ResultadoDAO;
 import edu.uclm.esi.ds.dao.UserDAO;
 import edu.uclm.esi.ds.domain.Board;
 import edu.uclm.esi.ds.domain.Match;
 import edu.uclm.esi.ds.domain.WaitingRoom;
+import edu.uclm.esi.ds.entities.Resultado;
 import edu.uclm.esi.ds.entities.User;
 
 
@@ -33,6 +35,8 @@ public class GameService {
 	
 	@Autowired
 	private UserDAO userDAO;
+	@Autowired
+	private ResultadoDAO resultadoDAO;
 	
 	public GameService() {
 		this.waitingRoom=new WaitingRoom();
@@ -67,6 +71,7 @@ public class GameService {
         int j2=movement.get(1).get("j2");
         board[i1][j1]=0;
         board[i2][j2]=0;
+        match.guardarMovimiento(info.get("idJugador").toString(), i1, j1, i2, j2);
         match.setBoard(board, info.get("idJugador").toString());
 
         Map<String, Object> matchMove = new HashMap<>();
@@ -109,15 +114,19 @@ public class GameService {
 	public void win(Map<String, Object> info) {
 		Match match=this.matches.get(info.get("idPartida"));
         String httpSessionRival=match.getHttpSessionRival(info.get("idJugador").toString());
-        avisarGanador(httpSessionRival);
+        avisarResultado(httpSessionRival, "perdido");
+        Resultado resultado=new Resultado();
+        resultado.setIdPartida(match.getId());
+        resultado.setIdGanador(match.getIdPlayer(info.get("idJugador").toString()));
+        resultado.setIdPerdedor(match.getIdPlayer(httpSessionRival));
+        resultado.setMovimientos(match.getMovimientos());
+        this.resultadoDAO.save(resultado); 
 	}
 
-	private void avisarGanador(String httpSessionRival) {
+	private void avisarResultado(String httpSessionRival, String resultado) {
 		WebSocketSession session=Manager.get().findWrapperSessionByHttp(httpSessionRival).getWebSocketSession();
-
         JSONObject jso = new JSONObject();
-        jso.put("type", "perdido");
-
+        jso.put("type", resultado);
         TextMessage message = new TextMessage(jso.toString());
         try {
             session.sendMessage(message);
@@ -133,12 +142,22 @@ public class GameService {
 		for(int i=0; i<match.getIdsPlayers().size();i++) {
 			String id=match.getIdsPlayers().get(i);
 			Optional<User> user=this.userDAO.findById(id);
-			
 			int fichas = user.get().getFichas();
 			user.get().setFichas(--fichas);
 			this.userDAO.save(user.get());
-		}
-		
+		}	
+	}
+
+	public void rendirse(Map<String, Object> info) {
+		Match match=this.matches.get(info.get("idPartida"));
+        String httpSessionRival=match.getHttpSessionRival(info.get("idJugador").toString());
+        avisarResultado(httpSessionRival, "ganado");
+        Resultado resultado=new Resultado();
+        resultado.setIdPartida(match.getId());
+        resultado.setIdGanador(match.getIdPlayer(httpSessionRival));
+        resultado.setIdPerdedor(match.getIdPlayer(info.get("idJugador").toString()));
+        resultado.setMovimientos(match.getMovimientos());
+        this.resultadoDAO.save(resultado);   
 	}
 	
 }

@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
@@ -18,13 +19,18 @@ public class Match {
 	private boolean ready;
 	private List<String> players;
 	private HashMap<String, Board> boards;
+	
+	//key:httpSession value:idBBDD
 	private HashMap<String, String> idsPlayers;
+	private HashMap<String, ArrayList<String>> movimientos;
+	
 	
 	public Match() {
 		this.id=UUID.randomUUID().toString();
 		this.players=new ArrayList<>();
 		this.boards = new HashMap<>();
 		this.idsPlayers=new HashMap<>();
+		this.movimientos=new HashMap<>();
 	}
 	
 	public String getId() {
@@ -104,5 +110,27 @@ public class Match {
 		return idsPlayers.values().stream().toList();
 	}
 
+	public void guardarMovimiento(String httpJugador, int i1, int j1, int i2, int j2) {
+		String idJugador=this.idsPlayers.get(httpJugador);
+		String movimientos = "{"+i1+","+j1+":"+i2+","+j2+"}";
+		ArrayList<String> movimientosHechos=this.movimientos.get(idJugador);
+		if(movimientosHechos==null) {
+			ArrayList<String> movimiento=new ArrayList<>();
+			movimiento.add(movimientos);
+			this.movimientos.put(idJugador, movimiento);
+		}else {
+			movimientosHechos.add(movimientos);
+			this.movimientos.put(idJugador, movimientosHechos);
+		}
+		
+		
+	}
+	public String getIdPlayer(String httpSession) {
+		return this.idsPlayers.get(httpSession);
+	}
+	
+	public String getMovimientos() {
+		return this.movimientos.toString();
+	}
 	
 }
