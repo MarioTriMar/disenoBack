@@ -42,10 +42,10 @@ public class EmailService {
 		System.out.println(jsoBody.toString());
 		RequestBody body = RequestBody.create(mediaType,jsoBody.toString());
 		Request request = new Request.Builder()
-			.url("https://api.sendinblue.com/v3/smtp/email")
+			.url("https://api.brevo.com/v3/smtp/email")
 			.method("POST", body)
 			.addHeader("Accept", " application/json")
-			.addHeader("Api-key","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")
+			.addHeader("Api-key","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")
 			.addHeader("Content-Type", "application/json")
 			.build();
 		try {
